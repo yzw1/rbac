@@ -20,26 +20,23 @@
                     </div>
                     <div class="widget-content padding">
                         <div id="basic-form">
-                            <form role="form" action="{:url('admin/user/save')}" method="post">
+                            <form role="form" action="{:url('admin/role/save')}" method="post">
                                 <div class="form-group">
-                                    <label for="exampleInputEmail1">用户名</label>
+                                    <label for="exampleInputEmail1">角色名</label>
                                     <input type="text" class="form-control" id="exampleInputEmail1"
-                                           placeholder="username" name="username">
+                                           placeholder="角色名" name="name" >
                                 </div>
                                 <div class="form-group">
-                                    <label for="exampleInputEmail1">真实姓名</label>
+                                    <label for="exampleInputEmail1">说明</label>
                                     <input type="text" class="form-control" id="exampleInputEmail1"
-                                           placeholder="name" name="name">
+                                           placeholder="说明" name="remark" >
                                 </div>
                                 <div class="form-group">
-                                    <label for="exampleInputPassword1">密码</label>
-                                    <input type="password" class="form-control" id="exampleInputPassword1"
-                                           placeholder="Password" name="pwd">
-                                </div>
-                                <div class="form-group">
-                                    <label for="exampleInputPassword1">确认密码</label>
-                                    <input type="password" class="form-control" id="exampleInputPassword1"
-                                           placeholder="Password" name="repwd">
+
+                                    <input type="radio" class="form-control" id="exampleInputPassword1"
+                                           placeholder="Password" name="status" value="1">启用
+                                    <input type="radio" class="form-control" id="exampleInputPassword1"
+                                           placeholder="Password" name="status" value="2" checked>禁用
                                 </div>
 
                                 <button type="submit" class="btn btn-default">Submit</button>
@@ -54,4 +51,4 @@
 
     </div>
 </div>
-    {/block}
+{/block}

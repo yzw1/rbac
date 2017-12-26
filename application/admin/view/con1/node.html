@@ -13,7 +13,7 @@
             <div class="col-md-12">
                 <div class="widget">
                     <div class="widget-header transparent">
-                        <h2><strong>用户管理</strong> {$title}</h2>
+                        <h2><strong>节点管理</strong> {$title}</h2>
                         <div class="additional-btn">
                             <a href="#" class="hidden reload"><i class="icon-ccw-1"></i></a>
                             <a href="#" class="widget-toggle"><i class="icon-down-open-2"></i></a>
@@ -28,10 +28,10 @@
                                 <tr>
                                     <th>ID</th>
                                     <!--<th style="width: 30px" data-sortable="false"><input type="checkbox" class="rows-check"></th>-->
-                                    <th>用户名</th>
-                                    <th>真实姓名</th>
-                                    <th>所属角色</th>
-                                    <!--<th>操作</th>-->
+                                    <th>节点名称</th>
+                                    <th>模块名(控制器)</th>
+                                    <th>方法名</th>
+                                    <th>状态</th>
                                     <!--<th data-sortable="false">Sort : Off</th>-->
                                     <!--<th>Status</th>-->
                                     <th data-sortable="false">操作</th>
@@ -39,23 +39,21 @@
                                 </thead>
 
                                 <tbody>
-                                {volist name="user" id="vo"}
+                                {volist name="nodes" id="vo"}
                                 <tr>
                                     <td>{$vo.id}</td>
                                     <!--<td><input type="checkbox" class="rows-check"></td>-->
-                                    <td><strong>{$vo.username}</strong></td>
-                                    <td>{$vo.name}</td>
+                                    <td><strong>{$vo.name}</strong></td>
+                                    <td>{$vo.mname}</td>
+                                    <td>{$vo.aname}</td>
                                     <td>
-
-                                       {foreach $vo.role as $v}
-                                        {$v}
-                                        {/foreach}
+                                    {if $vo.status == 1}启用
+                                        {else $vo.status == 2}禁用
+                                    {/if}
                                     </td>
                                     <!--<td><a href="mailto:#">name@domain.com</a></td>-->
                                     <!--<td>123</td>-->
-                                    <td><button class="btn btn-danger del-btn" data-id="{$vo.id}">删除</button><button class="btn btn-primary">修改
-                                    </button><button class="btn btn-success"
-                                    >分配权限</button></td>
+                                    <td><button class="btn btn-danger del-btn" data-id="{$vo.id}">删除</button><a href="{:url('admin/node/edit', ['id'=>$vo['id']])}" class="btn btn-primary">修改</a>
                                 </tr>
                                 {/volist}
 
@@ -84,9 +82,38 @@
     <!-- ============================================================== -->
 
 </div>
+{js href="/static/admin/assets/js/jquery.min.js"}
 <script>
-    $(function(){
-        $('.del-btn').click()
+
+    $(function () {
+        $('.del-btn').click(function (){
+            var ac_id = $(this).attr('data-id');
+//            console.log('fffffffffff'+ac_id);
+//            console.log('eeeeeeeeeeeeeeeeeeee');
+            if (confirm('你确定删除吗')){
+                var obj = $(this).parents('tr');
+                delAjax(ac_id,obj);
+            }
+        });
+//        执行Ajax删除
+        function delAjax(id,obj){
+            $.ajax({
+                type:'delete',
+                url:'/node/'+id,
+                dataType:'json',
+                success:function(data){
+                    if(data.status){
+                        obj.remove();
+                    }else{
+                        alert('删除失败');
+                    }
+                },
+                error:function(){
+                    alert('执行失败');
+                }
+            });
+        }
     });
+
 </script>
 {/block}

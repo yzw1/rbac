@@ -11,10 +11,14 @@
 
 use think\Route;
 
-Route::get('/', 'index/Index/index');
-
-Route::resource('users', 'rest/User');
-Route::get('users/read/:id', 'rest/User/readpage');
+//Route::get('/', 'index/Index/index');
+//用户的资源路由
+Route::resource('user', 'admin/User');
+//角色的资源路由
+Route::resource('role','admin/Role');
+//节点的资源路由
+Route::resource('node','admin/Node');
+//Route::get('users/read/:id', 'rest/User/readpage');
 
 
 return [

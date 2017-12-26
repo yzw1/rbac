@@ -13,7 +13,7 @@
             <div class="col-md-12">
                 <div class="widget">
                     <div class="widget-header transparent">
-                        <h2><strong>用户管理</strong> {$title}</h2>
+                        <h2><strong>角色管理</strong> {$title}</h2>
                         <div class="additional-btn">
                             <a href="#" class="hidden reload"><i class="icon-ccw-1"></i></a>
                             <a href="#" class="widget-toggle"><i class="icon-down-open-2"></i></a>
@@ -28,10 +28,10 @@
                                 <tr>
                                     <th>ID</th>
                                     <!--<th style="width: 30px" data-sortable="false"><input type="checkbox" class="rows-check"></th>-->
-                                    <th>用户名</th>
-                                    <th>真实姓名</th>
-                                    <th>所属角色</th>
-                                    <!--<th>操作</th>-->
+                                    <th>角色名</th>
+                                    <th>说明</th>
+                                    <th>状态</th>
+                                    <th>拥有权限</th>
                                     <!--<th data-sortable="false">Sort : Off</th>-->
                                     <!--<th>Status</th>-->
                                     <th data-sortable="false">操作</th>
@@ -39,21 +39,27 @@
                                 </thead>
 
                                 <tbody>
-                                {volist name="user" id="vo"}
+                                {volist name="role" id="vo"}
                                 <tr>
                                     <td>{$vo.id}</td>
                                     <!--<td><input type="checkbox" class="rows-check"></td>-->
-                                    <td><strong>{$vo.username}</strong></td>
-                                    <td>{$vo.name}</td>
+                                    <td><strong>{$vo.name}</strong></td>
+                                    <td>{$vo.remark}</td>
+                                    <td>
+                                    {if $vo.status==1}启用
+                                        {else $vo.status==2}禁用
+                                    {/if}</td>
                                     <td>
 
-                                       {foreach $vo.role as $v}
+                                        {foreach $vo.role as $v}
                                         {$v}
                                         {/foreach}
                                     </td>
+
+
                                     <!--<td><a href="mailto:#">name@domain.com</a></td>-->
                                     <!--<td>123</td>-->
-                                    <td><button class="btn btn-danger del-btn" data-id="{$vo.id}">删除</button><button class="btn btn-primary">修改
+                                    <td><button class="btn btn-danger">删除</button><button class="btn btn-primary">修改
                                     </button><button class="btn btn-success"
                                     >分配权限</button></td>
                                 </tr>
@@ -84,9 +90,5 @@
     <!-- ============================================================== -->
 
 </div>
-<script>
-    $(function(){
-        $('.del-btn').click()
-    });
-</script>
+
 {/block}
