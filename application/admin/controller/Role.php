@@ -99,7 +99,13 @@ class Role extends Controller
      */
     public function edit($id)
     {
-        //
+        //点击修改带回来的数据
+        $role = Db::name('role')->find($id);
+//        var_dump($role);
+        return view('admin@con1/role_edit',[
+            'title' => '角色编辑',
+            'role' => $role
+        ]);
     }
 
     /**
@@ -111,7 +117,25 @@ class Role extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        //验证是否是PUT请求
+        if (!Request::instance()->isPut()){
+            $this->error('你好像没迷路了');
+        }
+        $p = $request->put();
+//        var_dump($p);
+        $data = [
+            'name' => $p['name'],
+            'remark' => $p['remark'],
+            'status' => $p['status']
+        ];
+//        更新数据
+        $role = Db::name('role')->where('id',$id)->update($data);
+//        插入成功会大于0
+        if ($role>0){
+            $this->success('更新成功','admin/role/index');
+        }else{
+            $this->error('更新失败');
+        }
     }
 
     /**
@@ -122,6 +146,18 @@ class Role extends Controller
      */
     public function delete($id)
     {
-        //
+//        删除语句
+        $role = Db::name('role')->delete($id);
+        if ($role > 0){
+            $info['status'] = true;
+            $info['id'] = $id;
+        }else{
+            $info['status'] = false;
+            $info['id'] = $id;
+        }
+        //先给个假数据
+
+        return json($info);
+
     }
 }

@@ -31,10 +31,10 @@ class User extends Controller
             $arr[] = $v;
 //                var_dump($v);
         }
-//            var_dump($user);
+//            var_dump($arr);
 
 
-        return view('con1/func1',[
+        return view('con1/user',[
             'title'=>'用户列表',
             'user' => $arr]);
     }
@@ -47,7 +47,7 @@ class User extends Controller
     public function create()
     {
         //
-        return view('con1/func2',['title'=>'创建用户']);
+        return view('con1/user_add',['title'=>'创建用户']);
     }
 
     /**
@@ -92,8 +92,64 @@ class User extends Controller
     public function read($id)
     {
         //
+//        var_dump($id);
+//        $user = Db::view('user',' id  username')
+//            ->view('user_role','uid rid','user.id=user_role.uid')
+//            ->view('role','id name','role.id = user_role.rid')
+//            ->where('user.id',$id)
+//            ->select();
+//        var_dump($user[0]['username']);
+//        查询出指定用户
+        $user = Db::name('user')->field('id,username')->find($id);
+//        var_dump($user);
+//        查询出所有角色的名字
+        $role = Db::name('role')->field(' id,name')->select();
+//        var_dump($role);
+
+//        查询指定用户已经有哪些权限
+        $user_role = Db::name('user_role')->where(array('uid'=>array('eq',$id)))->select();
+//        var_dump($user_role);
+        $list = array();
+        foreach ($user_role as $v){
+            $list[] = $v['rid'];
+
+        }
+//        var_dump($list);
+        return view('admin@/con1/user_fetch',[
+            'title' => '用户分配权限',
+            'user'=>$user,
+            'role'=>$role,
+            'list' => $list
+        ]);
     }
 
+    /**
+     * 角色分配的修改
+     * @param Request $request
+     * @param $id
+     */
+    public function saveRole(Request $request)
+    {
+//记得开启事物做
+//        查看是哪个用户的ID
+        $uid = input('post.uid');
+//        //清除用户所有的角色信息，避免重复添加
+        $ur = Db::name('user_role')->where(array('uid'=>array('eq',$uid)))->delete();
+
+//        选中角色的ID
+        $data= $_POST['role'];
+        foreach ($data as $v){
+           $arr['rid'] = $v;
+           $arr['uid'] = $uid;
+            $result = Db::name('user_role')->data($arr)->insert();
+        }
+
+        if ($result > 0){
+            $this->success('修改成功','admin/user/index');
+        }else{
+            $this->error('修改失败');
+        }
+    }
     /**
      * 显示编辑资源表单页.
      *
@@ -103,6 +159,12 @@ class User extends Controller
     public function edit($id)
     {
         //
+        $user = Db::name('user')->field('userpass',true)->find($id);
+//        var_dump($user);
+        return view('admin@con1/user_edit',[
+            'title'=>'用户编辑',
+            'user'=>$user
+        ]);
     }
 
     /**
@@ -114,7 +176,23 @@ class User extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        //查看是否是put请求
+        if (!Request::instance()->isPut()){
+            $this->error('你好像迷路了老铁');
+        }
+        $p = $request->put();
+//        var_dump($p);
+        $data = [
+            'username' => $p['username'],
+            'name' => $p['name']
+        ];
+//        插入数据
+        $result = Db::name('user')->where('id',$id)->update($data);
+        if ($result > 0){
+            $this->success('修改成功','admin/user/index');
+        }else{
+            $this->error('修改失败');
+        }
     }
 
     /**
@@ -125,6 +203,16 @@ class User extends Controller
      */
     public function delete($id)
     {
-        //
+        //删除语句
+        $user = Db::name('user')->delete($id);
+        if($user > 0){
+            $info['status'] = true;
+            $info['id'] = $id;
+        }else{
+            $info['status'] = false;
+            $info['id'] = $id;
+        }
+
+        return json($info);
     }
 }

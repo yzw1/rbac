@@ -1,0 +1,63 @@
+{extend name="main/index" /}
+{block name="main"}
+
+<div class="content-page">
+
+    <div class="content">
+
+        <div class="row">
+
+            <div class="col-sm-6 portlets">
+
+                <div class="widget">
+                    <div class="widget-header transparent">
+                        <h2><strong>{$title}</strong> Form</h2>
+                        <div class="additional-btn">
+                            <a href="#" class="hidden reload"><i class="icon-ccw-1"></i></a>
+                            <a href="#" class="widget-toggle"><i class="icon-down-open-2"></i></a>
+                            <a href="#" class="widget-close"><i class="icon-cancel-3"></i></a>
+                        </div>
+                    </div>
+                    <div class="widget-content padding">
+                        <div id="basic-form">
+                            <form role="form" action="{:url('admin/role/update',['id' =>$role['id'] ])}" method="post">
+
+
+                                <!--请求伪装-->
+                                <input type="hidden" name="_method" value="PUT" >
+
+                                <div class="form-group">
+                                    <label for="exampleInputEmail1">角色名</label>
+                                    <input type="text" class="form-control" id="exampleInputEmail1"
+                                           placeholder="节点名" name="name" value="{$role.name}">
+                                </div>
+                                <div class="form-group">
+                                    <label for="exampleInputEmail1">说明</label>
+                                    <input type="text" class="form-control" id="exampleInputEmail1"
+                                           placeholder="控制器" name="remark" value="{$role.remark}">
+                                </div>
+
+                                <div class="form-group">
+
+                                    <input type="radio" class="form-control" id="exampleInputPassword1"
+                                           placeholder="Password" name="status" value="1" {if condition
+                                                   ="$role.status eq '1'"
+                                           }checked{/if}>启用
+                                    <input type="radio" class="form-control" id="exampleInputPassword1"
+                                           placeholder="Password" name="status" value="2" {if condition
+                                                   ="$role.status eq '2'"}checked{/if}>禁用
+                                </div>
+
+                                <button type="submit" class="btn btn-default">Submit</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+</div>
+{/block}

@@ -1,0 +1,51 @@
+{extend name="main/index" /}
+{block name="main"}
+
+<div class="content-page">
+
+    <div class="content">
+
+        <div class="row">
+
+            <div class="col-sm-6 portlets">
+
+                <div class="widget">
+                    <div class="widget-header transparent">
+                        <h2><strong>{$title}</strong> Form</h2>
+                        <div class="additional-btn">
+                            <a href="#" class="hidden reload"><i class="icon-ccw-1"></i></a>
+                            <a href="#" class="widget-toggle"><i class="icon-down-open-2"></i></a>
+                            <a href="#" class="widget-close"><i class="icon-cancel-3"></i></a>
+                        </div>
+                    </div>
+                    <div class="widget-content padding">
+                        <div id="basic-form">
+                            <form role="form" action="{:url('admin/user/saveRole')}" method="post">
+
+                                <div class="form-group">
+                                    <label for="exampleInputEmail1">{$user.username}用户</label>
+                                </div>
+                                {volist name = "role" id = "v"}
+                                <div class="form-group">
+                                    <!--$v.id是角色的ID 可以多选name值是一个数组-->
+                                    <input type="checkbox" class="form-control" id="exampleInputPassword1"
+                                           placeholder="Password" name="role[]" value="{$v.id}"
+                                    {if condition ="in_array($v['id'],$list)"}checked{/if}>{$v.name}
+
+                                </div>
+                              {/volist}
+                                <input type="hidden" name="uid" value="{$user.id}">
+                                <button type="submit" class="btn btn-default">Submit</button>
+
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+</div>
+{/block}

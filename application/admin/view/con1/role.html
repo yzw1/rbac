@@ -59,8 +59,7 @@
 
                                     <!--<td><a href="mailto:#">name@domain.com</a></td>-->
                                     <!--<td>123</td>-->
-                                    <td><button class="btn btn-danger">删除</button><button class="btn btn-primary">修改
-                                    </button><button class="btn btn-success"
+                                    <td><button class="btn btn-danger del-btn" data-id="{$vo.id}">删除</button><a href="{:url('admin/role/edit', ['id'=>$vo['id']])}" class="btn btn-primary">修改</a><button class="btn btn-success"
                                     >分配权限</button></td>
                                 </tr>
                                 {/volist}
@@ -90,5 +89,38 @@
     <!-- ============================================================== -->
 
 </div>
+{js href="/static/admin/assets/js/jquery.min.js"}
+<script>
+    $(function(){
+        $('.del-btn').click(function(){
+            var  ac_id = $(this).attr('data-id');
+//            console.log(ac_id);
+            if (confirm('你确定删除吗')){
+                var obj = $(this).parents('tr');
+//                console.log(obj);
+                delAjax(ac_id,obj);
+            }
+        });
+        function  delAjax(id,obj) {
+            $.ajax({
+                type:'delete',
+                url:'/role/'+id,
+                dataType:'json',
+                success:function(data){
+//                    console.log(data);
+                    if (data.status){
+                        obj.remove();
+                    }else{
+                        alert('数据传输错误');
+                    }
+                },
+                error:function(){
+                    alert('执行失败');
+                }
+            });
+        }
+    });
+</script>
+
 
 {/block}

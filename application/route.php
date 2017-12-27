@@ -10,6 +10,10 @@
 // +----------------------------------------------------------------------
 
 use think\Route;
+//角色保存修改的路由
+Route::post('user/saveRole/','admin/user/saveRole');
+//Route::get('user/list','admin/user/index');
+//Route::get('user/edit','admin/user/edit');
 
 //Route::get('/', 'index/Index/index');
 //用户的资源路由
@@ -18,6 +22,7 @@ Route::resource('user', 'admin/User');
 Route::resource('role','admin/Role');
 //节点的资源路由
 Route::resource('node','admin/Node');
+
 //Route::get('users/read/:id', 'rest/User/readpage');
 
 
