@@ -6,7 +6,7 @@ use think\Controller;
 use think\Db;
 use think\Request;
 
-class Node extends Controller
+class Node extends Admain
 {
     /**
      * 显示资源列表
@@ -145,9 +145,11 @@ class Node extends Controller
         if ($node > 0){
             $info['status'] = true;
             $info['id'] = $id;
+            $info['info'] = '删除成功';
         }else{
             $info['status'] = false;
             $info['id'] = $id;
+            $info['info'] = '删除失败';
         }
 //      返回给data的数据
         return json($info);

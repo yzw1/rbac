@@ -10,8 +10,19 @@
 // +----------------------------------------------------------------------
 
 use think\Route;
-//角色保存修改的路由
-Route::post('user/saveRole/','admin/user/saveRole');
+//进入后台
+Route::get('admin','admin/index/index');
+//Route::get('login','admin/main/logindo');
+//瞎拼路由
+//Route::get('/:name','admin/main/index');
+//后台主页的路由
+Route::get('main','admin/main/index');
+//Route::resource('index','admin/main/index');
+//用户保存修改的路由
+Route::post('user/saveRole/:id','admin/user/saveRole');
+//角色分配的路由
+Route::post('role/saveRole/:id','admin/role/saveRole');
+
 //Route::get('user/list','admin/user/index');
 //Route::get('user/edit','admin/user/edit');
 

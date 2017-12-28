@@ -6,7 +6,7 @@ use think\Controller;
 use think\Db;
 use think\Request;
 use think\Response;
-class Role extends Controller
+class Role extends  Admain
 {
     /**
      * 显示资源列表
@@ -88,7 +88,54 @@ class Role extends Controller
      */
     public function read($id)
     {
-        //
+        //查找所带过来的信息
+//        查看指定的角色
+        $role = Db::name('role')->field('id,name')->find($id);
+//        var_dump($role);
+//        查看所有节点
+        $node = Db::name('node')->field('id,name')->select();
+//        var_dump($node);
+//        查看指定角色带有的节点
+        $role_node = Db::name('role_node')->where(array('rid' => array('eq',$id)))->select();
+//        var_dump($role_node);
+        $rn = array();
+        foreach ($role_node as $v){
+                $rn[] = $v['nid'];
+
+        }
+
+        return view('admin@con1/role_fetch',[
+            'title' => '角色分配',
+            'role' => $role,
+            'node' => $node,
+            'rn' => $rn
+        ]);
+    }
+    public function saveRole(Request $request,$id)
+    {
+          $node = $request->post();
+        if (empty($node['node'])){
+            $this->error('不能为空');
+        }
+//        删除重复选择的节点
+        $rn = Db::name('role_node')->where(array('rid' =>array('eq',$id)))->delete();
+//        var_dump($rn);
+//        根据选择的节点插入表中
+
+//            var_dump($node['node']);die;
+            foreach ($node['node'] as $v){
+//            循环插入值（node有两个值）
+                $data['nid'] = $v;
+                $data['rid'] = $id;
+
+            $result = Db::name('role_node')->data($data)->insert();
+            }
+        if ($result > 0 ){
+            $this->success('分配成功','admin/role/index');
+        }else{
+            $this->error('分配失败');
+        }
+
     }
 
     /**
@@ -151,9 +198,11 @@ class Role extends Controller
         if ($role > 0){
             $info['status'] = true;
             $info['id'] = $id;
+            $info['info'] = '删除成功';
         }else{
             $info['status'] = false;
             $info['id'] = $id;
+            $info['info'] = '删除失败';
         }
         //先给个假数据
 

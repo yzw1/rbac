@@ -59,8 +59,8 @@
 
                                     <!--<td><a href="mailto:#">name@domain.com</a></td>-->
                                     <!--<td>123</td>-->
-                                    <td><button class="btn btn-danger del-btn" data-id="{$vo.id}">删除</button><a href="{:url('admin/role/edit', ['id'=>$vo['id']])}" class="btn btn-primary">修改</a><button class="btn btn-success"
-                                    >分配权限</button></td>
+                                    <td><button class="btn btn-danger del-btn" data-id="{$vo.id}">删除</button><a href="{:url('admin/role/edit', ['id'=>$vo['id']])}" class="btn btn-primary">修改</a><a href="{:url('admin/role/read', ['id'=>$vo['id']])}" class="btn btn-success">分配权限</a>
+                                       </td>
                                 </tr>
                                 {/volist}
 
@@ -90,6 +90,8 @@
 
 </div>
 {js href="/static/admin/assets/js/jquery.min.js"}
+<script src="/static/index/js/toastr.min.js"></script>
+<script src="/static/index/js/bootstrap.min.js"></script>
 <script>
     $(function(){
         $('.del-btn').click(function(){
@@ -109,9 +111,12 @@
                 success:function(data){
 //                    console.log(data);
                     if (data.status){
+                        toastr.success(data.info);
+
                         obj.remove();
                     }else{
-                        alert('数据传输错误');
+                        toastr.error(data.info, '警告 :');
+
                     }
                 },
                 error:function(){
@@ -120,6 +125,16 @@
             });
         }
     });
+    // 设置弹框参数
+    toastr.options = {
+        closeButton: true,// 是否显示关闭按钮
+        progressBar: true,// 实现显示计时条
+        timeOut: "3000",// 自动关闭时间
+        positionClass: "toast-top-right"// 提示位置
+        // positionClass: "toast-top-full-width"// 提示位置
+//         toast-top-full-width 顶端，宽度铺满整个屏幕
+        // toast-top-right  顶端右边
+    };
 </script>
 
 

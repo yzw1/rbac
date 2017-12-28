@@ -84,7 +84,8 @@
 </div>
 {js href="/static/admin/assets/js/jquery.min.js"}
 
-
+<script src="/static/index/js/toastr.min.js"></script>
+<script src="/static/index/js/bootstrap.min.js"></script>
 <script>
 
     $(function () {
@@ -105,9 +106,11 @@
                 dataType:'json',
                 success:function(data){
                     if(data.status){
+                        toastr.success(data.info);
+
                         obj.remove();
                     }else{
-                        alert('删除失败');
+                        toastr.error(data.info, '警告 :');
                     }
                 },
                 error:function(){

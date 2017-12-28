@@ -5,7 +5,7 @@ namespace app\admin\controller;
 use think\Controller;
 use think\Request;
 use think\Db;
-class User extends Controller
+class User extends  Admain
 {
     /**
      * 显示资源列表
@@ -67,7 +67,7 @@ class User extends Controller
         $data = [
             'username' => $p['username'],
             'name' => $p['name'],
-            'userpass' => $p['pwd']
+            'userpass' => md5($p['pwd'])
         ];
         if ($p['pwd'] = $p['repwd']){
                 unset($p['repwd']);
@@ -101,6 +101,7 @@ class User extends Controller
 //        var_dump($user[0]['username']);
 //        查询出指定用户
         $user = Db::name('user')->field('id,username')->find($id);
+
 //        var_dump($user);
 //        查询出所有角色的名字
         $role = Db::name('role')->field(' id,name')->select();
@@ -128,19 +129,21 @@ class User extends Controller
      * @param Request $request
      * @param $id
      */
-    public function saveRole(Request $request)
+    public function saveRole(Request $request,$id)
     {
 //记得开启事物做
-//        查看是哪个用户的ID
-        $uid = input('post.uid');
+        $role = $request->post();
+        if (empty($role['role'])){
+            $this->error('不能为空');
+        }
 //        //清除用户所有的角色信息，避免重复添加
-        $ur = Db::name('user_role')->where(array('uid'=>array('eq',$uid)))->delete();
+        $ur = Db::name('user_role')->where(array('uid'=>array('eq',$id)))->delete();
 
 //        选中角色的ID
-        $data= $_POST['role'];
-        foreach ($data as $v){
+
+        foreach ($role['role'] as $v){
            $arr['rid'] = $v;
-           $arr['uid'] = $uid;
+           $arr['uid'] = $id;
             $result = Db::name('user_role')->data($arr)->insert();
         }
 
@@ -208,11 +211,15 @@ class User extends Controller
         if($user > 0){
             $info['status'] = true;
             $info['id'] = $id;
+            $info['info'] = '删除成功';
+            return json($info);
         }else{
             $info['status'] = false;
             $info['id'] = $id;
+            $info['info'] = '删除失败';
+            return json($info);
         }
 
-        return json($info);
+
     }
 }
