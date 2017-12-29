@@ -35,9 +35,9 @@ class Main extends Controller
             $this->error('密码错误');
         }
 //        验证码
-//        if(!captcha_check($data['code'])){
-//            $this->error('验证码不对');
-//        };
+        if(!captcha_check($data['code'])){
+            $this->error('验证码不对');
+        };
         Session::set('admin_user',$p['username']);
 //        user表中的所有数据
          Session::set('admin',$user);
