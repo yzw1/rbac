@@ -58,31 +58,41 @@ class Main extends Controller
 //                        ->where('status',1)
 //                        ->select();
         $user_role = Db::name('user_role')->field('rid')->where(array('uid'=>array('eq',$user['id'])))->select();
-//        var_dump($user_role);die;
-      foreach ($user_role as $v){
-          $arr[] = $v['rid'];
-          var_dump($arr);die;
-//          写入数组
-          $role = Db::name('role')->field('id')->where(array('id'=>array('eq',$v['rid'])))->select();
-          var_dump($role);die;
-          foreach ($role as $v){
+//        var_dump($user_role);
+        foreach ($user_role as $k=> $v){
+             $role = Db::name('role')->field('id')->where(array('id'=>array('eq',$v['rid'])))->select();
 
-          }
-      }
-
-//        foreach ($nodelist as $v){
-//            $v['mname'] = ucfirst($v['mname']);
-//        }
-//        var_dump($v['mname']);die;
-
-
-
-
-
+        }
+//        var_dump($role);die;
+        foreach ($role as $v){
+            $role_node = Db::name('role_node')->field('nid')->where(array('rid'=>array('eq',$v['id'])))->select();
+        }
+        $node = array();
+        foreach ($role_node as $v){
+            $node[] = Db::name('node')->field('mname,aname')->where(array('id'=>array('eq',$v['nid'])))->select();
+        }
+//        var_dump($role_node);
+//        var_dump($node);
+        //控制器名转换为大写
+        foreach ($node as $k => $vo){
+            //控制器名转换为大写
+            foreach ($vo as $key => $val) {
+                $vo[$key]['mname'] = ucfirst($val['mname']);
+            }
+//            var_dump($vo);
+//            拼接出控制器的所有方法
+            foreach ( $vo as $v){
+                $nodelist[$v['mname']][] = $v['aname'];
+            }
+    }
+//    每个控制器有什么方法
+//        var_dump($nodelist);
+        Session::set('nodelist',$nodelist);
 
         return $this->redirect('admin/Main/index');
+      }
 
-    }
+
 
     /**
      * 后台登出处理

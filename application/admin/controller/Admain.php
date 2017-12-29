@@ -29,12 +29,16 @@ class Admain extends Controller
 //        $way = lcfirst($controller);
 //        $total = $way.'/'.$method;
 //        var_dump($total);die;
-//        列出权限列表
-
-
-//        判断admin用户有所有权限
+        $nodelist = Session::get('nodelist');
+        //让超级管理员admin拥有所有权限是admin就不用判断
         if(Session::get('admin_user') != 'admin'){
-            $this->error('你没有权限');
+            //验证操作权限
+            if(empty($nodelist[$controller]) || !in_array($method,$nodelist[$controller])){
+
+                $this->error("抱歉！没有操作权限！");
+                exit;
+            }
+
         }
 
 
